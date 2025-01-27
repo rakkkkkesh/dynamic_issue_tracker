@@ -1,70 +1,189 @@
-# Getting Started with Create React App
+# Dynamic Issue Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack web application for managing issues dynamically, featuring a React frontend, Node.js/Express backend, and MySQL database.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **View Issues**: Retrieve and display all issues from the database.
+- **Add Issues**: Add new issues with details such as location, category, severity, and more.
+- **Edit Issues**: Update issue details directly through the frontend.
+- **Delete Issues**: Remove issues from the database with confirmation.
+- **Image Support**: Upload and display images for each issue.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Node.js** (v14 or higher)
+2. **MySQL** (v8.0 or higher)
+3. **npm**
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation and Setup
 
-### `npm run build`
+### 1. Clone the Repository
+```bash
+git clone [(https://github.com/rakkkkkesh/dynamic_issue_tracker.git)]
+cd dynamic-issue-tracking-table
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. Set Up the Backend
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Navigate to the backend directory:
+    cd dynamic-issue-tracking-table
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Install dependencies:
+    npm install
 
-### `npm run eject`
+3. Configure the MySQL database:
+   - Open the code and ensure the database connection in the `db` object matches your MySQL setup:
+     ```javascript
+     const db = mysql.createConnection({
+       host: 'localhost',
+       user: 'root',
+       password: 'root',
+       database: 'issue_tracker',
+     });
+     ```
+   - Create a database in MySQL:
+     ```sql
+     CREATE DATABASE issue_tracker;
+     ```
+   - Create a table for issues:
+     ```sql
+     CREATE TABLE issues (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       location VARCHAR(255),
+       category VARCHAR(255),
+       subcategory VARCHAR(255),
+       description TEXT,
+       severity VARCHAR(50),
+       imagePath VARCHAR(255),
+       referenceCode1 VARCHAR(255),
+       referenceCode2 VARCHAR(255)
+     );
+     ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   - Insert a data for issues:
+     ```sql
+     
+      INSERT INTO issues (location, category, subcategory, description, severity, imagePath, referenceCode1, referenceCode2)
+      VALUES
+      ('Bathroom', 'Plumbing & Fixtures', 'Shower', 'Shower head has low water pressure.', 'Moderate', '/Images/low_pressure_shower.jpg', 'B2 PL', 'S 3'),
+      ('Bedroom', 'Electrical Work', 'Wiring', 'Exposed wires near the bedside table, potential hazard.', 'Critical', '/Images/exposed_wires.jpg', 'B2 EL', 'S 4'),
+      ('Hallway', 'Plumbing & Fixtures', 'Pipe', 'Burst pipe in the hallway, flooding the floor.', 'Critical', '/Images/burst_pipe.jpg', 'H2 PL', 'S 5'),
+      ('Kitchen', 'Electrical Work', 'Oven', 'Oven is not turning on, malfunctioning electrical wiring.', 'Critical', '/Images/oven_failure.jpg', 'K2 EL', 'S 6'),
+      ('Garage', 'Plumbing & Fixtures', 'Water Heater', 'Water heater making a loud noise, possible malfunction.', 'Moderate', '/Images/loud_water_heater.jpg', 'G2 PL', 'S 7'),
+      ('Living Room', 'Electrical Work', 'Sockets', 'Power outlets not working, possibly due to tripped circuit.', 'Moderate', '/Images/outlet_problem.jpg', 'L2 EL', 'S 8'),
+      ('Dining Room', 'Plumbing & Fixtures', 'Faucet', 'Faucet leaking from the base when turned on.', 'Moderate', '/Images/leaking_faucet.jpg', 'D2 PL', 'S 9'),
+      ('Bathroom', 'Electrical Work', 'Fan', 'Exhaust fan not working, needs repair or replacement.', 'Moderate', '/Images/fan_failure.jpeg', 'B2 EL', 'S 10');
+      
+           ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Start the backend server:
+    ```bash
+    nodemon server.js
+    ```
+    The backend will run at `http://localhost:3000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 3. Set Up the Frontend
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Navigate to the frontend directory:
+    ```bash
+    cd dynamic-issue-tracking-table
+    ```
 
-## Learn More
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Build the frontend for production:
+    ```bash
+    npm run build
+    ```
+    
+4. Start the development server:
+    ```bash
+    npm start
+    ```
+    The frontend will run at `http://localhost:3000`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Backend
 
-### Analyzing the Bundle Size
+- **GET /issues**: Retrieve all issues.
+- **POST /issues**: Add a new issue.
+  - Body parameters:
+    ```json
+    {
+      "location": "string",
+      "category": "string",
+      "subcategory": "string",
+      "description": "string",
+      "severity": "string",
+      "imagePath": "string",
+      "referenceCode1": "string",
+      "referenceCode2": "string"
+    }
+    ```
+- **PUT /issues/:id**: Update an issue by ID.
+  - Body parameters: Same as POST.
+- **DELETE /issues/:id**: Delete an issue by ID.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Open the application at `http://localhost:3000`.
+2. Interact with the issue tracker to:
+   - Add new issues.
+   - Edit existing issues.
+   - View the list of issues.
+   - Delete issues as needed.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Project Structure
 
-### Deployment
+```
+dynamic-issue-tracking-table
+├── build
+├── node_modules
+├── public
+|   ├── Images
+|   |     └── Your all images are here
+|   ├── index.html
+|   ├── manifest.json
+├── src
+│   ├── Components
+|   |       ├── DeleteConfirmation.jsx
+|   |       ├── EditModal.jsx
+|   |       ├── Table.jsx
+│   └── App.js
+|   ├── index.js
+|   ├── reportWebVitals.js
+├── .gitignore
+├── package-lock.json
+├── package.json
+├── README.md
+├── server.js
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Ensure the MySQL database is running and accessible before starting the backend.
+- Configure CORS if accessing the backend from a different origin.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
